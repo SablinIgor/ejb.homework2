@@ -1,0 +1,11 @@
+*.iml
+*.ipr
+*.iws
+
+.idea/*
+!.idea/runConfigurations/
+
+*.class
+target/
+
+nb-configuration.xml
