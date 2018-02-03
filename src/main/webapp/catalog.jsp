@@ -23,12 +23,12 @@
             </tr>
 
             <c:forEach var="category" items="${сategories}">
-		<tr>
-			<td>${category.id}</td>
-			<td>${category.code}</td>
-			<td>${category.name}</td>
-			<td>${category.creationDate}</td>
-		</tr>
+                <tr>
+                    <td>${category.id}</td>
+                    <td>${category.code}</td>
+                    <td>${category.name}</td>
+                    <td>${category.creationDate}</td>
+                </tr>
             </c:forEach>            
         </table> 
     </body>

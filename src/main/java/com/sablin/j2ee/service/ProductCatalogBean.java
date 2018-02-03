@@ -6,11 +6,8 @@
 package com.sablin.j2ee.service;
 
 import com.sablin.j2ee.model.*;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,10 +35,11 @@ public class ProductCatalogBean {
         System.out.println("ProductCatalogBean.getCategory");
         
         Category result = new Category();
+        final String q = "select id, code, name, creation_date from public.product_category where id=?";
                 
         try (Connection c = ds.getConnection();
-             Statement s = c.createStatement();
-             ResultSet r = s.executeQuery("select id, code, name, creation_date from public.product_category where id=" + id);) {         
+             PreparedStatement ps = createCategoryStatement(c, q, id);
+             ResultSet r = ps.executeQuery()) {
        
             if (r.next())
             {
@@ -56,6 +54,13 @@ public class ProductCatalogBean {
         }
                 
         return result;
+    }
+
+    private static PreparedStatement createCategoryStatement( Connection c, String s, final Long id) throws SQLException{
+        PreparedStatement ps = c.prepareStatement(s);
+        ps.setLong(1, id);
+
+        return ps;
     }
 
     public List<Category> getCategories(){
@@ -81,6 +86,7 @@ public class ProductCatalogBean {
     // insert into product_category (code, name) values('xxx','YYY')
     public Category createCategory(Long id){
         System.out.println("ProductCatalogBean.createCategory");
+
         return null;
     }    
 }
