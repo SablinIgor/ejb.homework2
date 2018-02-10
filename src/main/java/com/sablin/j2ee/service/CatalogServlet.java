@@ -20,43 +20,19 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Igor
  */
-@WebServlet(name = "DispatcherServlet", urlPatterns = {"/"})
-public class DispatcherServlet extends HttpServlet {
+@WebServlet(name = "CatalogServlet", urlPatterns = {"/catalog"})
+public class CatalogServlet extends HttpServlet {
     
     @Inject
     ProductCatalogBean catalog;
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-      
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
+        System.out.println("CatalogServlet");
+
         request.setAttribute("сategories", catalog.getCategories());
         getServletContext().getRequestDispatcher("/catalog.jsp").forward(request, response);
-
-
-//        response.setContentType("text/html;charset=UTF-8");
-//        
-//        List<Category> myCatalog = catalog.getCategories();
-//        
-//        for(Category i : myCatalog) {
-//            System.out.println("id: " + i.getId()); 
-//            System.out.println("name: " + i.getName()); 
-//        }
-//        
-//        Category oneCategory = catalog.getCategory(new Long(1));
-//        if (catalog != null) {
-//            System.out.println("id: " + oneCategory.getId()); 
-//            System.out.println("name: " + oneCategory.getName()); 
-//        }
 
     }
 

@@ -10,10 +10,13 @@
 <html>    
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Домашнее задание</title>
+        <title>Категрии продуктов</title>
     </head>
     <body>
-        <h1>Каталог</h1>
+        <h3>Категории продуктов</h3>
+
+        <a href="/EE2_2/newcategory">Новая категория</a>
+
         <table border="1">
             <tr>
                 <td>Идентификатор</td>
@@ -24,10 +27,11 @@
 
             <c:forEach var="category" items="${сategories}">
                 <tr>
-                    <td>${category.id}</td>
-                    <td>${category.code}</td>
-                    <td>${category.name}</td>
-                    <td>${category.creationDate}</td>
+                    <td><a href="/EE2_2/category?cid=${category.id}">${category.id}</a></td>
+                    <td><a href="/EE2_2/category?cid=${category.id}">${category.code}</a></td>
+                    <td><a href="/EE2_2/category?cid=${category.id}">${category.name}</a></td>
+                    <td><a href="/EE2_2/category?cid=${category.id}">${category.creationDate}</a></td>
+                    <td><a href="/EE2_2/delcategory?cid=${category.id}">Удалить</a></td>
                 </tr>
             </c:forEach>            
         </table> 

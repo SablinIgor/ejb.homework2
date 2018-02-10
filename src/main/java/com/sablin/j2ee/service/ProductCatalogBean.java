@@ -25,10 +25,14 @@ public class ProductCatalogBean {
     
     @Resource(lookup="jdbc/MyResource")
     private DataSource ds;
+    List<Category> AllCategories;
     
     @PostConstruct
     public void init(){
         System.out.println("ProductCatalogBean.init");
+        AllCategories = new ArrayList();
+             
+        UpdateCategories();            
     }
 
     public Category getCategory(Long id){
@@ -43,10 +47,16 @@ public class ProductCatalogBean {
        
             if (r.next())
             {
+                System.out.println("id: " +r.getLong("id"));
+                
                 result.setId(r.getLong("id"));
                 result.setName(r.getString("name"));
                 result.setCode(r.getString("code"));
                 result.setCreationDate(r.getDate("creation_date"));
+
+                // return new Category(r.getLong("id"), r.getString("name"),r.getString("code"),r.getDate("creation_date"));
+                // r.getTimestamp()
+                //
             }
             
         }catch(SQLException exc){
@@ -56,7 +66,9 @@ public class ProductCatalogBean {
         return result;
     }
 
-    private static PreparedStatement createCategoryStatement( Connection c, String s, final Long id) throws SQLException{
+    private static PreparedStatement createCategoryStatement( final Connection c,
+                                                              final String s,
+                                                              final Long id) throws SQLException{
         PreparedStatement ps = c.prepareStatement(s);
         ps.setLong(1, id);
 
@@ -65,28 +77,55 @@ public class ProductCatalogBean {
 
     public List<Category> getCategories(){
         System.out.println("ProductCatalogBean.getCategories");
+                        
+        return AllCategories;
+    }
+    
+    public void UpdateCategories(){
+        System.out.println("ProductCatalogBean.UpdateCategories");
+
+        AllCategories.clear();
         
-        List<Category> result = new ArrayList();;
-        
+        System.out.println("Лезем в базу " + new Date().toString() );
         try (Connection c = ds.getConnection();
              Statement s = c.createStatement();
              ResultSet r = s.executeQuery("select id, code, name, creation_date from public.product_category");) {         
        
             while (r.next()) 
             {
-                result.add(new Category(r.getLong("id"),r.getString("name"),r.getString("code"),r.getDate("creation_date")));                
+                AllCategories.add(new Category(r.getLong("id"),r.getString("name"),r.getString("code"),r.getDate("creation_date")));                
             }
         }catch(SQLException exc){
             exc.printStackTrace();
-        }
-        
-        return result;
-    }
+        }      
+    }    
     
     // insert into product_category (code, name) values('xxx','YYY')
-    public Category createCategory(Long id){
+    public void createCategory(final String name, final String code){
         System.out.println("ProductCatalogBean.createCategory");
 
-        return null;
+        try (Connection c = ds.getConnection();
+             Statement s = c.createStatement();)
+        {
+             s.executeUpdate("insert into product_category (code, name) values('" + code + "','" + name +"')");         
+             UpdateCategories();  
+       
+        }catch(SQLException exc){
+            exc.printStackTrace();
+        }             
     }    
+    
+    public void deleteCategory(final Long id){
+        System.out.println("ProductCatalogBean.deleteCategory");
+
+        try (Connection c = ds.getConnection();
+             Statement s = c.createStatement();)
+        {
+             s.executeUpdate("delete from product_category where id = " + id);         
+             UpdateCategories();  
+       
+        }catch(SQLException exc){
+            exc.printStackTrace();
+        }             
+    }       
 }
